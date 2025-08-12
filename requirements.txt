@@ -1,0 +1,10 @@
+python-dontenv
+openai>=1.0.0
+Streamlit
+pandas
+
+
+#Potentials
+#TensorFLow for handwriting recognition 
+#SQlite
+#scikit-learn
