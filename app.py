@@ -179,4 +179,5 @@ else:
 
 # Footer
 st.markdown("---")
+st.markdown("© 2025 Markus Means | [https://github.com/MeansMarkus/AI-ML-Japanese-Tutor]") 
 st.markdown("Built with Streamlit + OpenAI API | Your Japanese Learning Journey 🚀")
