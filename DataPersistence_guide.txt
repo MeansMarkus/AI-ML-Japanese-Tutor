@@ -72,4 +72,4 @@ Backups are stored in the `data/backups/` folder.
 
 ---
 
-For further help, see the README or contact the
+For further help, see the README 
