@@ -1,0 +1,75 @@
+# Data Persistence Guide for Japanese AI Tutor
+
+This app supports two data persistence methods: **JSON** and **SQLite**. You can easily switch between them to suit your needs.
+
+---
+
+## 1. Persistence Methods
+
+- **JSON**: Stores your data in a human-readable `.json` file.
+- **SQLite**: Stores your data in a local database file (`.db`), recommended for reliability and larger datasets.
+
+---
+
+## 2. How to Switch Persistence Method
+
+You can change the persistence method in one of three ways:
+
+### a. Edit the Config File
+
+Open `config.py` and set:
+    PERSISTENCE_METHOD: str = "sqlite"   # or "json"
+
+### b. Use the Sidebar (Debug Mode)
+
+If debug mode is enabled, use the sidebar dropdown to switch between JSON and SQLite. Click "Switch Persistence" to apply.
+
+### c. Environment Variable
+
+Set the environment variable before running the app:
+    On Windows (Command Prompt):
+        set JAPANESE_TUTOR_PERSISTENCE_METHOD=sqlite
+    Or add to your `.env` file:
+        JAPANESE_TUTOR_PERSISTENCE_METHOD=sqlite
+
+---
+
+## 3. Data Locations
+
+- **JSON**: `data/learned_words.json`
+- **SQLite**: `data/japanese_tutor.db`
+
+Backups are stored in the `data/backups/` folder.
+
+---
+
+## 4. Importing and Exporting Data
+
+- Use the sidebar buttons to export your data to a backup file or import a backup.
+- When switching between JSON and SQLite, you can export from one format and import into the other.
+
+---
+
+## 5. Clearing All Data
+
+- Use the "Danger Zone" expander in the sidebar to clear all your progress.
+- **Warning:** This action is irreversible!
+
+---
+
+## 6. Troubleshooting
+
+- If you see errors about missing files or database issues, check your `data/` folder permissions.
+- If you get a slider error, make sure you have more than one word due for review.
+- For advanced debugging, enable `DEBUG_MODE` in `config.py` to see detailed error messages.
+
+---
+
+## 7. Recommendations
+
+- For most users, **SQLite** is recommended for better performance and reliability.
+- Regularly export backups to avoid data loss.
+
+---
+
+For further help, see the README or contact the
