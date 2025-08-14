@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 #import custom ML utilities
 from ml_utils import (calculate_success_rate, get_current_streak, 
                      get_words_due_for_review, update_word_after_review, get_review_stats)
+
 # Load environment variables
 load_dotenv()
 
@@ -145,8 +146,8 @@ if api_key:
                 "added_date": datetime.now().strftime("%Y-%m-%d"),
                 "practice_count": 0,
                 "review_sequence": [],
-                "last_review_date": None,
-                "next_review_date": datetime.now().strftime("%Y-%m-%d")
+                "last_reviewed": None,
+                "next_review": datetime.now().strftime("%Y-%m-%d")  # ✅ Fixed: changed from next_review_date
             }
             st.session_state.learned_words.append(word_entry)
             st.success(f"Added: {new_word_jp} ({new_word_en})")
@@ -166,6 +167,7 @@ if api_key:
             )
         else:
             st.info("Add words as you learn them during conversations!")
+    
     with tab4:
         st.subheader("🧠 Smart Review - ML Powered")
         
@@ -210,10 +212,10 @@ if api_key:
                 st.markdown("### What does this mean in English?")
                 st.markdown(f"# {current_word['japanese']}")
                 
-                # Show word stats if it has review history
+                # ✅ Fixed: Pass the word object, not just the review_sequence
                 if current_word.get('review_sequence'):
-                    success_rate = calculate_success_rate(current_word['review_sequence'])
-                    streak = get_current_streak(current_word['review_sequence'])
+                    success_rate = calculate_success_rate(current_word)
+                    streak = get_current_streak(current_word)
                     st.caption(f"Your stats: {success_rate:.1%} success rate, {streak} current streak")
                 
                 # User input
@@ -274,11 +276,16 @@ if api_key:
                 # Quiz completed
                 st.success("🎉 Review session completed!")
                 
-                # Show session summary
+                # ✅ Fixed: Proper session summary calculation
                 completed_words = due_words[:st.session_state.current_quiz_index]
                 if completed_words:
-                    correct_count = sum(1 for word in completed_words 
-                                      if word.get('review_sequence') and word['review_sequence'][-1])
+                    correct_count = 0
+                    for word in completed_words:
+                        if word.get('review_sequence') and len(word['review_sequence']) > 0:
+                            # Check if the last review was correct
+                            if word['review_sequence'][-1].get('correct', False):
+                                correct_count += 1
+                    
                     total_count = len(completed_words)
                     session_success_rate = correct_count / total_count if total_count > 0 else 0
                     
@@ -296,11 +303,12 @@ if api_key:
                 st.subheader("📅 Next Review Schedule")
                 upcoming_reviews = []
                 for word in st.session_state.learned_words:
-                    if word.get('next_review_date'):
+                    # ✅ Fixed: Use correct field name
+                    if word.get('next_review'):
                         upcoming_reviews.append({
                             'word': word['japanese'],
                             'meaning': word['english'],
-                            'next_review': word['next_review_date']
+                            'next_review': word['next_review']
                         })
                 
                 if upcoming_reviews:
@@ -317,11 +325,12 @@ if api_key:
                 st.subheader("📅 Upcoming Reviews")
                 upcoming_reviews = []
                 for word in st.session_state.learned_words:
-                    if word.get('next_review_date'):
+                    # ✅ Fixed: Use correct field name
+                    if word.get('next_review'):
                         upcoming_reviews.append({
                             'word': word['japanese'],
                             'meaning': word['english'], 
-                            'next_review': word['next_review_date']
+                            'next_review': word['next_review']
                         })
                 
                 if upcoming_reviews:

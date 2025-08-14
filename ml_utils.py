@@ -2,22 +2,22 @@ from datetime import datetime, timedelta
 import json
 
 def calculate_success_rate(word):
-    """Calculate success rate for a word based on review history"""
-    if 'review_history' not in word or not word['review_history']:
+    """Calculate success rate for a word based on review sequence"""
+    if 'review_sequence' not in word or not word['review_sequence']:
         return 0.0
     
-    correct_reviews = sum(1 for review in word['review_history'] if review['correct'])
-    total_reviews = len(word['review_history'])
+    correct_reviews = sum(1 for review in word['review_sequence'] if review['correct'])
+    total_reviews = len(word['review_sequence'])
     return correct_reviews / total_reviews if total_reviews > 0 else 0.0
 
 def get_current_streak(word):
     """Get current streak of correct answers"""
-    if 'review_history' not in word or not word['review_history']:
+    if 'review_sequence' not in word or not word['review_sequence']:
         return 0
     
     streak = 0
-    # Go through review history in reverse (most recent first)
-    for review in reversed(word['review_history']):
+    # Go through review sequence in reverse (most recent first)
+    for review in reversed(word['review_sequence']):
         if review['correct']:
             streak += 1
         else:
@@ -73,16 +73,16 @@ def get_words_due_for_review(learned_words):
 
 def update_word_after_review(word, is_correct):
     """Update word data after a review session"""
-    # Initialize review history if it doesn't exist
-    if 'review_history' not in word:
-        word['review_history'] = []
+    # Initialize review sequence if it doesn't exist
+    if 'review_sequence' not in word:
+        word['review_sequence'] = []
     
-    # Add this review to history
+    # Add this review to sequence
     review_entry = {
         'date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         'correct': is_correct
     }
-    word['review_history'].append(review_entry)
+    word['review_sequence'].append(review_entry)
     
     # Calculate new success rate and streak
     success_rate = calculate_success_rate(word)
@@ -116,11 +116,11 @@ def get_review_stats(learned_words):
     total_reviews = 0
     
     for word in learned_words:
-        if 'review_history' in word and word['review_history']:
+        if 'review_sequence' in word and word['review_sequence']:
             words_with_reviews += 1
             success_rate = calculate_success_rate(word)
             total_success_rates += success_rate
-            total_reviews += len(word['review_history'])
+            total_reviews += len(word['review_sequence'])
     
     average_success_rate = total_success_rates / words_with_reviews if words_with_reviews > 0 else 0.0
     
