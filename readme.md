@@ -80,7 +80,7 @@ A modern, interactive Japanese vocabulary and kanji learning app powered by AI a
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/japanese-ai-tutor.git
+git clone https://github.com/MeansMarkus/japanese-ai-tutor.git
 cd japanese-ai-tutor
 ```
 
