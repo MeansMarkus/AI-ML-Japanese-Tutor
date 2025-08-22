@@ -81,7 +81,7 @@ A modern, interactive Japanese vocabulary and kanji learning app powered by AI a
 
 ```bash
 git clone https://github.com/MeansMarkus/AI-ML-Japanese-Tutor.git
-cd japanese-ai-tutor
+cd AI-ML-Japanese-Tutor
 ```
 
 ### 2. Install Requirements
