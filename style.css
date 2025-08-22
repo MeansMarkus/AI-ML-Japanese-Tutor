@@ -1,27 +1,54 @@
 /*
- * Updated style.css
+ * Professional Streamlit CSS
+ *
+ * This CSS implements the described design:
+ * - Specific color palette with muted green, strong red, and soft pink.
+ * - Improved spacing and layout for a clean, professional look.
+ * - "Card-like" containers with soft borders and shadows.
+ * - Targeted styling for Streamlit components like buttons, alerts, and inputs.
  */
 
-/* General App Refinements */
-body {
-    /* Optional: Use a custom font if you like */
-    font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+/* General App & Font Refinements */
+@import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&family=Roboto:wght@400;500&display=swap');
+/* Using Segoe UI and Roboto as specified */
+
+/* Color Palette */
+:root {
+    --primary-accent: #E63946;   /* Strong Red for accents and errors */
+    --success-color: #A7C957;    /* Muted Green for success messages */
+    --card-border-color: #FADADD;/* Soft Pink for borders and inputs */
+    --background-color: #F8F9FA; /* A very light gray off-white */
+    --card-background: #FFFFFF;
+    --text-color: #343A40;       /* Dark, professional text */
+    --light-text: #6C757D;
+    --shadow-color: rgba(0, 0, 0, 0.05);
 }
 
-/* Sidebar Refinements */
+body {
+    font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+/* Sidebar Styling */
 [data-testid="stSidebar"] {
+    background-color: var(--card-background);
     padding: 20px;
 }
 
 /* Add spacing between elements in the sidebar */
-[data-testid="stSidebar"] .stButton {
+.stButton > button {
     margin-bottom: 10px; /* Space between buttons */
 }
-[data-testid="stSidebar"] .stSelectbox, [data-testid="stSidebar"] .stRadio {
+.stSelectbox, .stRadio, .stTextInput, .stTextArea {
     margin-bottom: 20px; /* Space after selectboxes/radio buttons */
 }
 
 /* Main Content Refinements */
+.main {
+    background-color: var(--background-color);
+}
+
 /* Spacing between sections */
 .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
     margin-top: 2em; /* Add top margin to headers for spacing */
@@ -30,51 +57,63 @@ body {
 
 /* Add dividers for visual separation */
 .stDivider {
-    border-top: 2px solid #E63946; /* Accent color for dividers */
+    border-top: 2px solid var(--primary-accent); /* Accent color for dividers */
     margin: 2em 0; /* Add margin around the divider */
 }
 
 /* Card-like containers with borders */
 .stContainer {
-    border: 1px solid #FADADD; /* Soft pink border to define the card */
+    border: 1px solid var(--card-border-color); /* Soft pink border to define the card */
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 8px var(--shadow-color);
     padding: 20px;
     margin-bottom: 20px;
+    background-color: var(--card-background);
 }
 
 /* Specific Component Refinements */
 /* Style for st.success and other positive messages */
 .stAlert.stSuccess {
-    background-color: #A7C957; /* Success/Positive Feedback color */
+    background-color: var(--success-color); /* Success/Positive Feedback color */
     color: #FFFFFF;
     border-radius: 8px; /* Match the theme */
     padding: 15px;
+    border: none;
 }
 
 /* Style for st.error and other negative messages */
 .stAlert.stError {
-    background-color: #E63946; /* Using the primary accent color for errors */
+    background-color: var(--primary-accent); /* Using the primary accent color for errors */
     color: #FFFFFF;
     border-radius: 8px;
     padding: 15px;
+    border: none;
 }
 
 /* Specific button styling for a "danger zone" action */
-/* We will target this button by key in Python */
 [data-testid="stButton"] button[type="button"].danger-button {
-    background-color: #E63946; /* Red for danger */
-    border: 1px solid #E63946;
+    background-color: var(--primary-accent); /* Red for danger */
+    border: 1px solid var(--primary-accent);
+    color: #FFFFFF;
 }
 
 [data-testid="stButton"] button[type="button"].danger-button:hover {
     background-color: #A42B36; /* Darker red on hover */
     border: 1px solid #A42B36;
+    color: #FFFFFF;
 }
 
 /* Style for input fields to match the theme */
-.stTextInput, .stTextArea {
-    border: 1px solid #FADADD; /* Soft pink border */
+.stTextInput > div > div > input,
+.stTextArea > div > div > textarea,
+.stSelectbox > div > button {
+    border: 1px solid var(--card-border-color); /* Soft pink border */
     border-radius: 5px;
     padding: 10px;
+}
+.stTextInput > div > div > input:focus,
+.stTextArea > div > div > textarea:focus,
+.stSelectbox > div > button:focus {
+    border-color: var(--primary-accent);
+    box-shadow: 0 0 0 2px rgba(230, 57, 70, 0.2);
 }
