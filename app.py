@@ -76,7 +76,7 @@ except Exception as e:
     if config.DEBUG_MODE:
         st.sidebar.error(f"Stats error: {e}")
 
-# Manual save button (only if auto-save is disabled or debug mode)
+# Manual save button
 if not config.AUTO_SAVE_ENABLED or config.DEBUG_MODE:
     if st.sidebar.button("💾 Save Data"):
         try:
@@ -84,92 +84,69 @@ if not config.AUTO_SAVE_ENABLED or config.DEBUG_MODE:
             st.sidebar.success("Data saved!")
         except Exception as e:
             st.sidebar.error(f"Save error: {e}")
-
-# Export data
-if st.sidebar.button("📤 Export Data"):
-    try:
-        if config.PERSISTENCE_METHOD == "sqlite":
-            export_path = persistence_manager.export_to_json()
-        else:
-            export_path = persistence_manager.export_all_data()
-        
-        if export_path:
-            st.sidebar.success(f"Data exported!")
             
-            # Provide download link
-            with open(export_path, 'r', encoding='utf-8') as f:
-                backup_data = f.read()
-            
-            st.sidebar.download_button(
-                "⬇️ Download Backup",
-                backup_data,
-                file_name=os.path.basename(export_path),
-                mime="application/json"
-            )
-    except Exception as e:
-        st.sidebar.error(f"Export error: {e}")
 
-# Import data
-uploaded_backup = st.sidebar.file_uploader("📥 Import Backup", type=['json'])
-if uploaded_backup is not None:
-    if st.sidebar.button("Import Data"):
+## Data Actions
+
+
+# This is the new, consolidated block.
+with st.sidebar.expander("📊 Data Actions"):
+    # Export Data
+    if st.button("⬆️ Export All Data"):
         try:
-            # Save uploaded file temporarily
-            temp_dir = config.DATA_DIRECTORY
-            if not os.path.exists(temp_dir):
-                os.makedirs(temp_dir)
-            
-            temp_path = os.path.join(temp_dir, "temp_import.json")
-            with open(temp_path, 'wb') as f:
-                f.write(uploaded_backup.getvalue())
-            
-            # Import based on persistence method
             if config.PERSISTENCE_METHOD == "sqlite":
-                success = persistence_manager.import_from_json(temp_path)
+                export_path = persistence_manager.export_to_json()
             else:
-                success = persistence_manager.import_data(temp_path)
-            
-            if success:
-                st.sidebar.success("Data imported successfully!")
-                # Reload session state
-                st.session_state.learned_words = persistence_manager.load_learned_words() if hasattr(persistence_manager, 'load_learned_words') else []
-                st.session_state.conversation_history = persistence_manager.load_conversation_history() if hasattr(persistence_manager, 'load_conversation_history') else []
-                st.session_state.user_settings = persistence_manager.load_user_settings() if hasattr(persistence_manager, 'load_user_settings') else {}
-                st.rerun()
-            
-            # Clean up temp file
-            if os.path.exists(temp_path):
-                os.remove(temp_path)
-                
+                export_path = persistence_manager.export_all_data()
+
+            if export_path:
+                st.success("Data exported successfully! See download button below.")
+                with open(export_path, 'rb') as f:
+                    st.download_button(
+                        "⬇️ Download Backup",
+                        f.read(),
+                        file_name=os.path.basename(export_path),
+                        mime="application/json"
+                    )
         except Exception as e:
-            st.sidebar.error(f"Import error: {e}")
+            st.error(f"Export error: {e}")
 
-# Configuration panel (only in debug mode)
-if config.DEBUG_MODE:
-    st.sidebar.markdown("---")
-    st.sidebar.subheader("🔧 Configuration")
-    
-    new_persistence = st.sidebar.selectbox(
-        "Persistence Method:", 
-        ["json", "sqlite"], 
-        index=0 if config.PERSISTENCE_METHOD == "json" else 1
-    )
-    
-    if new_persistence != config.PERSISTENCE_METHOD:
-        if st.sidebar.button("Switch Persistence"):
-            from config import update_config
-            update_config(PERSISTENCE_METHOD=new_persistence)
-            st.sidebar.success(f"Switched to {new_persistence}! Please restart the app.")
+    # Import Data
+    uploaded_backup = st.file_uploader("⬇️ Import Backup", type=['json'])
+    if uploaded_backup is not None:
+        if st.button("Confirm Import"):
+            try:
+                temp_path = os.path.join(config.DATA_DIRECTORY, "temp_import.json")
+                with open(temp_path, 'wb') as f:
+                    f.write(uploaded_backup.getvalue())
 
-# Clear data option (with confirmation)
-with st.sidebar.expander("🗑️ Danger Zone", expanded=False):
-    st.warning("⚠️ This will delete all your progress!")
-    if st.button("Clear All Data", type="secondary"):
-        if st.button("⚠️ CONFIRM DELETE", type="secondary"):
+                if config.PERSISTENCE_METHOD == "sqlite":
+                    success = persistence_manager.import_from_json(temp_path)
+                else:
+                    success = persistence_manager.import_data(temp_path)
+                
+                if success:
+                    st.success("Data imported successfully! Reloading...")
+                    st.session_state.learned_words = persistence_manager.load_learned_words()
+                    st.session_state.conversation_history = persistence_manager.load_conversation_history()
+                    st.session_state.user_settings = persistence_manager.load_user_settings()
+                    os.remove(temp_path)
+                    st.rerun()
+                else:
+                    st.error("Import failed. Please check the file format.")
+            except Exception as e:
+                st.error(f"Import error: {e}")
+
+    # Danger Zone (Clear All Data)
+    st.markdown("---")
+    with st.expander("🗑️ Danger Zone"):
+        st.warning("⚠️ This action will permanently delete ALL your data.")
+        clear_confirmed = st.button("⚠️ CONFIRM DELETE ALL DATA")
+        
+        if clear_confirmed:
             try:
                 if persistence_manager.clear_all_data():
-                    st.success("All data cleared!")
-                    # Reset session state
+                    st.success("All data cleared successfully!")
                     st.session_state.learned_words = []
                     st.session_state.conversation_history = []
                     st.session_state.user_settings = {}
@@ -192,7 +169,9 @@ if api_key:
     # Tab navigation
     tab1, tab2, tab3, tab4, tab5 = st.tabs(["💬 Chat Practice", "📊 Progress", "📝 Vocabulary", "🧠 Smart Review", "⚙️ Settings"])
     
-    with tab1:
+with tab1:
+    # Use a container to apply the card-like styling
+    with st.container(border=True):
         st.subheader("Conversation Practice")
         
         # Load user preferences
@@ -203,7 +182,7 @@ if api_key:
         with col1:
             # Difficulty level
             level = st.selectbox("Your Level:", config.AVAILABLE_LEVELS, 
-                               index=config.AVAILABLE_LEVELS.index(default_level))
+                                 index=config.AVAILABLE_LEVELS.index(default_level))
         
         with col2:
             # Topic selection
@@ -239,7 +218,8 @@ if api_key:
                 if topic in suggested_phrases:
                     suggestion = random.choice(suggested_phrases[topic])
                     st.info(f"💡 Try asking: \"{suggestion}\"")
-        
+
+        # Your original logic for handling the send_button click goes here
         if send_button and user_input:
             # Create system prompt based on level and topic
             system_prompt = f"""You are a helpful Japanese language tutor. 
@@ -688,3 +668,29 @@ if api_key:
         st.write(f"Temperature: **{config.TEMPERATURE}**")
         st.write(f"Max quiz words per session: **{config.MAX_QUIZ_WORDS}**")
         st.write("To change advanced settings, edit your config file.")
+
+import streamlit as st
+import time
+
+# --- Inject custom CSS from style.css ---
+with open('style.css') as f:
+    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
+
+
+
+
+
+
+# --- A small script to demonstrate the custom danger button CSS ---
+# This part is just for demonstration, you'd integrate it with your actual logic
+st.markdown("""
+<script>
+    const buttons = window.parent.document.querySelectorAll('[data-testid="stButton"] button');
+    buttons.forEach(button => {
+        if (button.textContent.includes('Clear All Data')) {
+            button.classList.add('danger-button');
+        }
+    });
+</script>
+""", unsafe_allow_html=True)
