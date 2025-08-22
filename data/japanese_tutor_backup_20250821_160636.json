@@ -1,0 +1,61 @@
+{
+  "export_date": "2025-08-21T16:06:36.280066",
+  "learned_words": [
+    {
+      "japanese": "Kuruma",
+      "english": "car",
+      "added_date": "2025-08-14",
+      "practice_count": 0,
+      "review_sequence": [
+        {
+          "date": "2025-08-14 01:03:19",
+          "correct": true
+        }
+      ],
+      "last_reviewed": "2025-08-14",
+      "next_review": "2025-08-21"
+    },
+    {
+      "japanese": "neko",
+      "english": "cat",
+      "added_date": "2025-08-14",
+      "practice_count": 0,
+      "review_sequence": [
+        {
+          "date": "2025-08-14 01:03:26",
+          "correct": true
+        }
+      ],
+      "last_reviewed": "2025-08-14",
+      "next_review": "2025-08-21"
+    }
+  ],
+  "conversation_history": [
+    {
+      "user": "hello!",
+      "ai": "こんにちは！(Hello!)\n\nHello! How can I help you today?",
+      "timestamp": "2025-08-14 00:57",
+      "level": "Beginner",
+      "topic": "Daily Greetings"
+    },
+    {
+      "user": "Hwo do you say car in japanese",
+      "ai": "車 (くるま) (car)",
+      "timestamp": "2025-08-14 00:58",
+      "level": "Beginner",
+      "topic": "Daily Greetings"
+    },
+    {
+      "user": "Eki wa doko desu ka?",
+      "ai": "駅はどこですか？ (Where is the train station?)\n\nThe word \"eki\" means \"train station\" in Japanese. If you're looking for a train station, you can ask, \"Eki wa doko desu ka?\" to ask for directions.",
+      "timestamp": "2025-08-14 01:04",
+      "level": "Advanced",
+      "topic": "Travel"
+    }
+  ],
+  "user_settings": {
+    "preferred_level": "Intermediate",
+    "favorite_topics": [],
+    "daily_goal": 5
+  }
+}
