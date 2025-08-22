@@ -1,0 +1,80 @@
+/*
+ * Updated style.css
+ */
+
+/* General App Refinements */
+body {
+    /* Optional: Use a custom font if you like */
+    font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+}
+
+/* Sidebar Refinements */
+[data-testid="stSidebar"] {
+    padding: 20px;
+}
+
+/* Add spacing between elements in the sidebar */
+[data-testid="stSidebar"] .stButton {
+    margin-bottom: 10px; /* Space between buttons */
+}
+[data-testid="stSidebar"] .stSelectbox, [data-testid="stSidebar"] .stRadio {
+    margin-bottom: 20px; /* Space after selectboxes/radio buttons */
+}
+
+/* Main Content Refinements */
+/* Spacing between sections */
+.stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
+    margin-top: 2em; /* Add top margin to headers for spacing */
+    margin-bottom: 0.5em; /* Add some space below headers */
+}
+
+/* Add dividers for visual separation */
+.stDivider {
+    border-top: 2px solid #E63946; /* Accent color for dividers */
+    margin: 2em 0; /* Add margin around the divider */
+}
+
+/* Card-like containers with borders */
+.stContainer {
+    border: 1px solid #FADADD; /* Soft pink border to define the card */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+/* Specific Component Refinements */
+/* Style for st.success and other positive messages */
+.stAlert.stSuccess {
+    background-color: #A7C957; /* Success/Positive Feedback color */
+    color: #FFFFFF;
+    border-radius: 8px; /* Match the theme */
+    padding: 15px;
+}
+
+/* Style for st.error and other negative messages */
+.stAlert.stError {
+    background-color: #E63946; /* Using the primary accent color for errors */
+    color: #FFFFFF;
+    border-radius: 8px;
+    padding: 15px;
+}
+
+/* Specific button styling for a "danger zone" action */
+/* We will target this button by key in Python */
+[data-testid="stButton"] button[type="button"].danger-button {
+    background-color: #E63946; /* Red for danger */
+    border: 1px solid #E63946;
+}
+
+[data-testid="stButton"] button[type="button"].danger-button:hover {
+    background-color: #A42B36; /* Darker red on hover */
+    border: 1px solid #A42B36;
+}
+
+/* Style for input fields to match the theme */
+.stTextInput, .stTextArea {
+    border: 1px solid #FADADD; /* Soft pink border */
+    border-radius: 5px;
+    padding: 10px;
+}
