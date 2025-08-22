@@ -282,7 +282,7 @@ class JapaneseGrammarFineTuner:
                 "grammar: 私の名前田中です。"
             ]
         
-        print("\n🧪 Testing your fine-tuned model:")
+        print("\n🧪 Testing fine-tuned model:")
         print("=" * 80)
         
         self.model.eval()
@@ -312,7 +312,7 @@ def run_fine_tuning_with_your_data():
     """Run the complete fine-tuning pipeline with YOUR training data"""
     
     print("🎌 Japanese Grammar Correction Fine-Tuning")
-    print("Using YOUR collected training data!")
+    print("Using my collected training data!")
     print("=" * 60)
     
     # Initialize fine-tuner
