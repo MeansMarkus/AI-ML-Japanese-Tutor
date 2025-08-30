@@ -47,14 +47,19 @@ if config.DEBUG_MODE:
 st.sidebar.title("⚙️ Setup")
 
 # Try to get API key from environment variable first
-env_api_key = os.getenv("OPENAI_API_KEY")
-
-if env_api_key:
-    api_key = env_api_key
-    st.sidebar.success("✅ API Key loaded from environment")
-else:
-    api_key = st.sidebar.text_input("Enter OpenAI API Key:", type="password")
-    st.sidebar.info("💡 Tip: Add OPENAI_API_KEY to your .env file")
+# Try to get API key from Streamlit secrets first, then environment variable
+try:
+    api_key = st.secrets["OPENAI_API_KEY"]
+    st.sidebar.success("✅ API Key loaded from deployment")
+except (KeyError, FileNotFoundError):
+    # Fallback to environment variable (for local development)
+    env_api_key = os.getenv("OPENAI_API_KEY")
+    if env_api_key:
+        api_key = env_api_key
+        st.sidebar.success("✅ API Key loaded from environment")
+    else:
+        api_key = None
+        st.sidebar.error("❌ No API Key found. Please contact the app administrator.")
 
 # Data Management Section
 st.sidebar.markdown("---")
