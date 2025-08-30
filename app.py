@@ -174,120 +174,120 @@ if api_key:
     # Tab navigation
     tab1, tab2, tab3, tab4, tab5 = st.tabs(["💬 Chat Practice", "📊 Progress", "📝 Vocabulary", "🧠 Smart Review", "⚙️ Settings"])
     
-with tab1:
-    # Use a container to apply the card-like styling
-    with st.container(border=True):
-      st.subheader("Conversation Practice")
-        
-        # Load user preferences
-        default_level = st.session_state.user_settings.get("preferred_level", config.DEFAULT_LEVEL)
-        
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            # Difficulty level
-            level = st.selectbox("Your Level:", config.AVAILABLE_LEVELS, 
-                                 index=config.AVAILABLE_LEVELS.index(default_level))
-        
-        with col2:
-            # Topic selection
-            topic = st.selectbox("Practice Topic:", config.AVAILABLE_TOPICS)
-        
-        # Update user settings when level changes
-        if level != st.session_state.user_settings.get("preferred_level"):
-            st.session_state.user_settings["preferred_level"] = level
-            if config.AUTO_SAVE_ENABLED:
-                try:
-                    save_func()
-                except Exception as e:
-                    if config.DEBUG_MODE:
-                        st.error(f"Auto-save error: {e}")
-        
-        # Chat interface
-        user_input = st.text_input("Type in English or Japanese:", placeholder="こんにちは！ (Hello!)")
-        
-        col1, col2 = st.columns([1, 4])
-        with col1:
-            send_button = st.button("Send Message", type="primary")
-        with col2:
-            if st.button("🎲 Get Topic Suggestion"):
-                import random
-                suggested_phrases = {
-                    "Daily Greetings": ["How do you say 'good morning'?", "What's a polite way to say goodbye?"],
-                    "Food & Restaurants": ["How do I order sushi?", "What does 'oishii' mean?"],
-                    "Travel": ["How do I ask for directions?", "What's the word for 'train station'?"],
-                    "Work & School": ["How do you say 'meeting' in Japanese?", "What does 'ganbatte' mean?"],
-                    "Hobbies": ["How do I talk about my hobbies?", "What's the word for 'music'?"],
-                    "Free Conversation": ["Tell me about Japanese culture", "What's a common Japanese greeting?"]
-                }
-                if topic in suggested_phrases:
-                    suggestion = random.choice(suggested_phrases[topic])
-                    st.info(f"💡 Try asking: \"{suggestion}\"")
-
-        # Your original logic for handling the send_button click goes here
-        if send_button and user_input:
-            # Create system prompt based on level and topic
-            system_prompt = f"""You are a helpful Japanese language tutor. 
-            Student level: {level}
-            Topic: {topic}
+    with tab1:
+        # Use a container to apply the card-like styling
+        with st.container(border=True):
+            st.subheader("Conversation Practice")
             
-            Rules:
-            1. Respond in both Japanese and English
-            2. Introduce 1-2 new words naturally
-            3. Correct any mistakes gently
-            4. Keep responses encouraging and educational
-            5. Format: Japanese text (English translation)
-            6. Keep responses concise and focused
-            """
+            # Load user preferences
+            default_level = st.session_state.user_settings.get("preferred_level", config.DEFAULT_LEVEL)
             
-            try:
-                # Call OpenAI API with configured settings
-                response = client.chat.completions.create(
-                    model=config.OPENAI_MODEL,
-                    messages=[
-                        {"role": "system", "content": system_prompt},
-                        {"role": "user", "content": user_input}
-                    ],
-                    max_tokens=config.MAX_TOKENS,
-                    temperature=config.TEMPERATURE
-                )
-                
-                ai_response = response.choices[0].message.content
-                
-                # Store conversation
-                conversation_entry = {
-                    "user": user_input,
-                    "ai": ai_response,
-                    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"),
-                    "level": level,
-                    "topic": topic
-                }
-                
-                st.session_state.conversation_history.append(conversation_entry)
-                
-                # Auto-save after adding conversation
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                # Difficulty level
+                level = st.selectbox("Your Level:", config.AVAILABLE_LEVELS, 
+                                     index=config.AVAILABLE_LEVELS.index(default_level))
+            
+            with col2:
+                # Topic selection
+                topic = st.selectbox("Practice Topic:", config.AVAILABLE_TOPICS)
+            
+            # Update user settings when level changes
+            if level != st.session_state.user_settings.get("preferred_level"):
+                st.session_state.user_settings["preferred_level"] = level
                 if config.AUTO_SAVE_ENABLED:
                     try:
-                        if config.PERSISTENCE_METHOD == "sqlite":
-                            persistence_manager.save_conversation(conversation_entry)
-                        else:
-                            save_func()
+                        save_func()
                     except Exception as e:
                         if config.DEBUG_MODE:
                             st.error(f"Auto-save error: {e}")
+            
+            # Chat interface
+            user_input = st.text_input("Type in English or Japanese:", placeholder="こんにちは！ (Hello!)")
+            
+            col1, col2 = st.columns([1, 4])
+            with col1:
+                send_button = st.button("Send Message", type="primary")
+            with col2:
+                if st.button("🎲 Get Topic Suggestion"):
+                    import random
+                    suggested_phrases = {
+                        "Daily Greetings": ["How do you say 'good morning'?", "What's a polite way to say goodbye?"],
+                        "Food & Restaurants": ["How do I order sushi?", "What does 'oishii' mean?"],
+                        "Travel": ["How do I ask for directions?", "What's the word for 'train station'?"],
+                        "Work & School": ["How do you say 'meeting' in Japanese?", "What does 'ganbatte' mean?"],
+                        "Hobbies": ["How do I talk about my hobbies?", "What's the word for 'music'?"],
+                        "Free Conversation": ["Tell me about Japanese culture", "What's a common Japanese greeting?"]
+                    }
+                    if topic in suggested_phrases:
+                        suggestion = random.choice(suggested_phrases[topic])
+                        st.info(f"💡 Try asking: \"{suggestion}\"")
+
+            # Your original logic for handling the send_button click goes here
+            if send_button and user_input:
+                # Create system prompt based on level and topic
+                system_prompt = f"""You are a helpful Japanese language tutor. 
+                Student level: {level}
+                Topic: {topic}
                 
-                # Display response
-                st.write("**AI Tutor:**")
-                st.write(ai_response)
+                Rules:
+                1. Respond in both Japanese and English
+                2. Introduce 1-2 new words naturally
+                3. Correct any mistakes gently
+                4. Keep responses encouraging and educational
+                5. Format: Japanese text (English translation)
+                6. Keep responses concise and focused
+                """
                 
-                # Extract potential new words (simple heuristic)
-                if "(" in ai_response and ")" in ai_response:
-                    st.info("💡 Found new vocabulary! Add words to your collection in the Vocabulary tab.")
-                
-            except Exception as e:
-                st.error(f"Error: {e}")
-                if config.DEBUG_MODE:
-                    st.error(f"Full error details: {str(e)}")
+                try:
+                    # Call OpenAI API with configured settings
+                    response = client.chat.completions.create(
+                        model=config.OPENAI_MODEL,
+                        messages=[
+                            {"role": "system", "content": system_prompt},
+                            {"role": "user", "content": user_input}
+                        ],
+                        max_tokens=config.MAX_TOKENS,
+                        temperature=config.TEMPERATURE
+                    )
+                    
+                    ai_response = response.choices[0].message.content
+                    
+                    # Store conversation
+                    conversation_entry = {
+                        "user": user_input,
+                        "ai": ai_response,
+                        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"),
+                        "level": level,
+                        "topic": topic
+                    }
+                    
+                    st.session_state.conversation_history.append(conversation_entry)
+                    
+                    # Auto-save after adding conversation
+                    if config.AUTO_SAVE_ENABLED:
+                        try:
+                            if config.PERSISTENCE_METHOD == "sqlite":
+                                persistence_manager.save_conversation(conversation_entry)
+                            else:
+                                save_func()
+                        except Exception as e:
+                            if config.DEBUG_MODE:
+                                st.error(f"Auto-save error: {e}")
+                    
+                    # Display response
+                    st.write("**AI Tutor:**")
+                    st.write(ai_response)
+                    
+                    # Extract potential new words (simple heuristic)
+                    if "(" in ai_response and ")" in ai_response:
+                        st.info("💡 Found new vocabulary! Add words to your collection in the Vocabulary tab.")
+                    
+                except Exception as e:
+                    st.error(f"Error: {e}")
+                    if config.DEBUG_MODE:
+                        st.error(f"Full error details: {str(e)}")
     
     with tab2:
         st.subheader("Learning Progress")
