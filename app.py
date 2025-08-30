@@ -232,15 +232,21 @@ if api_key:
                 Topic: {topic}
                 
                 Rules:
-                1. Respond in both Japanese and English
-                2. Introduce 1-2 new words naturally
-                3. Correct any mistakes gently
-                4. Keep responses encouraging and educational
-                5. Format: Japanese text [romanji] (English translation)
-                6. Example: こんにちは [Konnichiwa] (Hello)
-                7. Keep responses concise and focused
-                8. Add furigana for kanji where appropriate
-                9. Example with furigana: 日本(にほん) [Nihon] (Japan)
+                1. ALWAYS respond in this exact format for every sentence:
+                    Japanese text with furigana [romanji] (English translation)
+                    Example: こんにちは [Konnichiwa] (Hello)
+                    Example with kanji + furigana: 日本(にほん) [Nihon] (Japan)
+
+                2. Every response must include BOTH Japanese and English translations. 
+                    Do NOT skip the English translation.
+
+                3. Introduce 1-2 new words naturally in the conversation.
+
+                4. Correct any mistakes gently, and explain corrections in English.
+
+                5. Keep responses concise and focused.
+
+                6. Stay encouraging and educational.
                 """
                 
                 try:
