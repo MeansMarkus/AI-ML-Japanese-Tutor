@@ -236,8 +236,9 @@ if api_key:
                 2. Introduce 1-2 new words naturally
                 3. Correct any mistakes gently
                 4. Keep responses encouraging and educational
-                5. Format: Japanese text (English translation)
-                6. Keep responses concise and focused
+                5. Format: Japanese text [romanji] (English translation)
+                6. Example: こんにちは [Konnichiwa] (Hello)
+                7. Keep responses concise and focused
                 """
                 
                 try:
