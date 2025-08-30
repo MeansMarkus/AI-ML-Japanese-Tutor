@@ -174,10 +174,10 @@ if api_key:
     # Tab navigation
     tab1, tab2, tab3, tab4, tab5 = st.tabs(["💬 Chat Practice", "📊 Progress", "📝 Vocabulary", "🧠 Smart Review", "⚙️ Settings"])
     
-  with tab1:
+with tab1:
     # Use a container to apply the card-like styling
-      with st.container(border=True):
-        st.subheader("Conversation Practice")
+    with st.container(border=True):
+      st.subheader("Conversation Practice")
         
         # Load user preferences
         default_level = st.session_state.user_settings.get("preferred_level", config.DEFAULT_LEVEL)
