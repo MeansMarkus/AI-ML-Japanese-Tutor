@@ -239,6 +239,8 @@ if api_key:
                 5. Format: Japanese text [romanji] (English translation)
                 6. Example: こんにちは [Konnichiwa] (Hello)
                 7. Keep responses concise and focused
+                8. Add furigana for kanji where appropriate
+                9. Example with furigana: 日本(にほん) [Nihon] (Japan)
                 """
                 
                 try:
