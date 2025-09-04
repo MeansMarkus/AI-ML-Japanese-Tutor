@@ -1,7 +1,6 @@
 
 torch
 transformers
-wandb
 python-dotenv
 openai>=1.0.0
 Streamlit
