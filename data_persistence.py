@@ -3,8 +3,19 @@ import os
 from datetime import datetime
 import streamlit as st
 import pandas as pd
+import hashlib
+
 
 class DataPersistence:
+
+    def get_user_id(self):
+        """Generate Unuque User ID for data persistence"""
+        if 'get_user_id' not in st.session_state:
+            #create a unique user id to persist data across sessions
+            user_id = hashlib.sha256(os.urandom(16)).hexdigest()
+            st.session_state['get_user_id'] = user_id
+        return st.session_state['get_user_id']
+
     def __init__(self, data_dir="data"):
         """Initialize data persistence with a data directory"""
         self.data_dir = data_dir
