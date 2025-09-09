@@ -472,7 +472,101 @@ def get_words_due_for_review(learned_words: List[dict]) -> List[dict]:
 
 ## T5-Model-info
   
+T5 Transformer Model
+
+Architecture Overview
+The application initially explored a custom fine-tuned T5 transformer model for Japanese grammar correction before adopting GPT-3.5 Turbo for production use.
+Training Data Pipeline
+The model utilized a comprehensive four-method data collection approach:
+
+Data Generation Methods
+
+```python
+python# Four distinct data generation methods
+
+def method_1_manual_expert_data():      # Expert annotations
+def method_2_synthetic_data_generation(): # Template-based generation  
+def method_3_lang8_style_data():        # Learner error simulation
+def method_4_jlpt_based_data():         # Proficiency-graded examples
+```
+Expert-curated examples: High-quality grammar corrections focusing on common learner errors across multiple proficiency levels.
+Synthetic data generation: Template-based error injection across multiple grammar patterns, simulating realistic student mistakes.
+Learner simulation: L1 interference patterns and overgeneralization errors based on common Japanese language learning challenges.
+JLPT-structured data: Difficulty-graded examples aligned with Japanese proficiency standards (N5-N3 coverage).
+Model Architecture
+Base Model: Google's MT5-small (multilingual T5)
+Task Format: Text-to-text generation ("grammar: [incorrect]" → "[correct]")
+Fine-tuning: Full parameter updates with AdamW optimizer
+Evaluation: Validation loss tracking and qualitative correction assessment
+Technical Implementation
+Data Collection Pipeline
+
+python# training_data_collection.py - Four distinct data generation methods
+
+
+```python
+class JapaneseGrammarDataGenerator:
+    def generate_training_data(self):
+        data = []
+        data.extend(self.method_1_manual_expert_data())
+        data.extend(self.method_2_synthetic_data_generation())
+        data.extend(self.method_3_lang8_style_data())
+        data.extend(self.method_4_jlpt_based_data())
+        return data
+```
+Error Categories Covered
+
+Particle usage: は/が, を, に/で distinctions
+Tense consistency: Past, present, and future form corrections
+Adjective conjugation: い-adjective and な-adjective forms
+Word order patterns: SOV structure and modifier placement
+Politeness level appropriateness: Formal vs informal register
+
+Fine-tuning Pipeline
+python# fine_tuning.py - Complete training pipeline
+
+```python
+class T5GrammarTrainer:
+    def __init__(self, model_name="google/mt5-small"):
+        self.tokenizer = T5Tokenizer.from_pretrained(model_name)
+        self.model = T5ForConditionalGeneration.from_pretrained(model_name)
     
+    def train(self, training_data):
+        # Custom PyTorch Dataset implementation
+        # T5ForConditionalGeneration fine-tuning
+        # Learning rate scheduling with warmup
+        # Checkpoint management and model persistence
+        # Validation loop with loss tracking
+```
+Results & Performance
+Training Statistics
+
+Total Examples: ~200+ carefully crafted training pairs ~200+ available training sentences from JCoLA (Japanese Corpus of Linguistic Acceptability)
+
+Error Types: 15+ distinct grammatical error categories
+Difficulty Levels: JLPT N5-N3 coverage
+Training Time: 2-3 hours on GPU
+
+Findings:
+-Ran it for 3 Epochs
+-Epoch 2 ended up being most accurate, so set that as a base and implemented edge cases based on things it missed such as particle usage, keigo usage, etc.
+
+Model Capabilities
+The fine-tuned model successfully corrects common Japanese grammar errors:
+python# Example corrections
+Input:  "grammar: 私が学生です。"
+Output: "私は学生です。"        # Correct は/が particle usage
+
+Input:  "grammar: 本が読みます。"  
+Output: "本を読みます。"        # Correct object particle を
+
+Input:  "grammar: 昨日映画を見ます。"
+Output: "昨日映画を見ました。"    # Correct past tense
+Production Decision
+While this fine-tuning approach demonstrated technical feasibility, GPT-3.5 Turbo was ultimately chosen for production deployment due to several practical considerations:
+Broader linguistic knowledge: Better handling of edge cases and contextual nuances beyond the training data scope.
+Faster deployment: No infrastructure required for custom model hosting and serving.
+Consistent performance: Reduced need for extensive validation datasets and model maintenance.
 
 ## Deployment
 
@@ -635,10 +729,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
-- OpenAI for providing the GPT API
+- OpenAI GPT API
 - Streamlit for the web framework
-- The Japanese language learning community for inspiration and feedback
 
 ---
-
-**Happy Learning! 頑張って！ (Ganbatte!)**
