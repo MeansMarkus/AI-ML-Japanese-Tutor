@@ -12,7 +12,7 @@ A comprehensive Streamlit-based application for learning Japanese through AI-pow
 - [API Integration](#api-integration)
 - [Data Persistence](#data-persistence)
 - [Machine Learning Features](#machine-learning-features)
-- [T5 Transformer Model I trained](#T5-Transformer-info)
+- [T5 Transformer Model I trained](#T5-Model-info)
 - [Deployment](#deployment)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
